@@ -1,0 +1,13 @@
+{
+    "name": "pbc/debug-tools",
+    "description": "WordPress Debugging Tools for PBC projects",
+    "type": "wordpress-muplugin",
+    "license": "GPL2",
+    "authors": [
+        {
+            "name": "Stewart Ritchie",
+            "email": "stewart@poweredbycoffee.co.uk"
+        }
+    ],
+    "require": {}
+}
