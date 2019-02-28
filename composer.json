@@ -9,5 +9,7 @@
             "email": "stewart@poweredbycoffee.co.uk"
         }
     ],
-    "require": {}
+    "require": {
+        "filp/whoops": "^2.3"
+    }
 }
