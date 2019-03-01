@@ -20,6 +20,26 @@
  */
 
 
+
+use \Exception as BaseException;
+use \Whoops\Handler\PrettyPageHandler;
+use \Whoops\Run;
+
+$whoops = new \Whoops\Run;
+$handler = new PrettyPageHandler();
+$handler->setApplicationPaths([__FILE__]);
+$whoops->pushHandler($handler);
+$whoops->register();
+
+
+
+
+
+
+
+//throw new Exception("Something broke!");
+//askdk
+
 function pbc_backtrace(){
 	
 	$trace = debug_backtrace();
