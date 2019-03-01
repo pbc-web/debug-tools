@@ -66,11 +66,15 @@ function pbc_backtrace(){
 }
 
 
-function pbc_dump($trace){
+function pbc_dump($trace, $kill = false){
+
 	echo "<pre>";
 	var_dump($trace);
 	echo "</pre>";
-	die();
+
+	if($kill == true){
+		die();
+	}
 }
 
 function pbc_log($log){
