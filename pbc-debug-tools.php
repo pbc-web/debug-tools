@@ -26,6 +26,7 @@ use \Whoops\Handler\PrettyPageHandler;
 use \Whoops\Run;
 
 $whoops = new \Whoops\Run;
+$whoops->silenceErrorsInPaths([ABSPATH . "/content/plugins"]);
 $handler = new PrettyPageHandler();
 $handler->setApplicationPaths([__FILE__]);
 $whoops->pushHandler($handler);
