@@ -19,7 +19,9 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-
+if(!WP_DEBUG){
+	return;
+}
 
 use \Exception as BaseException;
 use \Whoops\Handler\PrettyPageHandler;
