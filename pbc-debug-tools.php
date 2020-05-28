@@ -11,7 +11,7 @@
  * Plugin Name: Powered By Coffee Debug Tools
  * Plugin URI:  https://poweredbycoffee.co.uk
  * Description: Description of the plugin.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      stewarty
  * Author URI:  https://poweredbycoffee.co.uk
  * Text Domain: pbc-debug-tools
@@ -19,7 +19,10 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-if(!WP_DEBUG){
+if(
+	(!WP_DEBUG) OR
+	(defined("WP_CLI"))
+){
 	return;
 }
 
@@ -28,37 +31,75 @@ use \Whoops\Handler\PrettyPageHandler;
 use \Whoops\Run;
 
 $whoops = new \Whoops\Run;
-$whoops->silenceErrorsInPaths([ABSPATH . "/content/plugins"]);
+$whoops->silenceErrorsInPaths([ABSPATH . '/content/plugins']);
 $handler = new PrettyPageHandler();
 $handler->setApplicationPaths([__FILE__]);
+
+$server_keys = [
+	'DB_HOST',
+	'SCRIPT_FILENAME',
+	'DOCUMENT_ROOT',
+	'PROJECT_NAME',
+	'BOX_NAME',
+	'LOCAL_DIR',
+	'LOCAL_DOMAIN',
+	'LOCAL_IP',
+	'STAGING_DIR',
+	'STAGING_DOMAIN',
+	'PRODUCTION_DIR',
+	'PRODUCTION_DOMAIN',
+	'WP_ENV',
+	'DB_NAME',
+	'DB_USER',
+	'DB_PASSWORD',
+	'DB_HOST',
+	'WP_HOME',
+	'WP_SITEURL'
+];
+
+$environment_keys = [
+	'PROJECT_NAME',
+	'BOX_NAME',
+	'LOCAL_DIR',
+	'LOCAL_DOMAIN',
+	'LOCAL_IP',
+	'STAGING_DIR',
+	'STAGING_DOMAIN',
+	'PRODUCTION_DIR',
+	'PRODUCTION_DOMAIN',
+	'WP_ENV',
+	'DB_NAME',
+	'DB_USER',
+	'DB_PASSWORD',
+	'DB_HOST',
+	'WP_HOME',
+	'WP_SITEURL'
+];
+
+foreach($server_keys as $key) {
+	$handler->blacklist('_SERVER', $key);
+}
+
+foreach($environment_keys as $key) {
+	$handler->blacklist('_ENV', $key);
+}
+
 $whoops->pushHandler($handler);
 $whoops->register();
 
-
-
-
-
-
-
-//throw new Exception("Something broke!");
-//askdk
-
-function pbc_backtrace(){
+function pbc_backtrace() {
 	
 	$trace = debug_backtrace();
 
-	//echo "<pre>";
-	//var_dump($trace);
-
 	echo "<table>";
 
-	foreach($trace as $key => $line){
+	foreach($trace as $key => $line) {
 
-		if($line['function'] == "pbc_backtrace"){
+		if($line['function'] == "pbc_backtrace") {
 			continue;
 		}
 
-		if(($line['function'] == "do_action") && (($line['class'] == "WP_Hook") )){
+		if(($line['function'] == "do_action") && (($line['class'] == "WP_Hook") )) {
 			continue;
 		}
 
@@ -88,30 +129,27 @@ function pbc_backtrace(){
 	
 }
 
-
-function pbc_dump($trace, $kill = false){
+function pbc_dump($trace, $kill = false) {
 
 	echo "<pre>";
 	var_dump($trace);
 	echo "</pre>";
 
-	if($kill == true){
+	if($kill == true) {
 		die();
 	}
 }
 
-function pbc_log($log){
+function pbc_log($log) {
 	write_log($log);
 }
 
-
 if ( ! function_exists('write_log')) {
-   function write_log ( $log )  {
-      if ( is_array( $log ) || is_object( $log ) ) {
-         error_log( print_r( $log, true ) );
-      } else {
-         error_log( $log );
-      }
-   }
+	function write_log ( $log )  {
+		if ( is_array( $log ) || is_object( $log ) ) {
+			error_log( print_r( $log, true ) );
+		} else {
+			error_log( $log );
+		}
+	}
 }
-
